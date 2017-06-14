@@ -8,8 +8,8 @@
 const fs = require('fs');
 const qs = require('querystring');
 const raw = require('raw-body');
-const inflate = require('inflation');
 const lib = require('think_lib');
+const inflate = require('inflation');
 const formidable = require('formidable');
 const fs_unlink = lib.promisify(fs.unlink, fs);
 const fs_access = lib.promisify(fs.access, fs);
@@ -130,17 +130,17 @@ const parsePayload = function (ctx, options) {
 };
 
 module.exports = function (options) {
-    return function * (ctx, next) {
-        ctx._get = ctx.query;
+    return function* (ctx, next) {
+        lib.define(ctx, '_get', ctx.query, 1);
         // parse payload
         ctx.request.body = yield parsePayload(ctx, options);
         if (ctx.request.body.post) {
-            ctx._post = ctx.request.body.post;
+            lib.define(ctx, '_post', ctx.request.body.post, 1);
         } else {
-            ctx._post = ctx.request.body;
+            lib.define(ctx, '_post', ctx.request.body, 1);
         }
         if (ctx.request.body.file) {
-            ctx._file = ctx.request.body.file;
+            lib.define(ctx, '_file', ctx.request.body.file, 1);
         }
 
         /**
@@ -150,7 +150,7 @@ module.exports = function (options) {
          * @param {any} value 
          * @returns 
          */
-        ctx.get = function (name, value) {
+        lib.define(ctx, 'get', function (name, value) {
             if (value === undefined) {
                 if (name === undefined) {
                     return ctx._get;
@@ -163,7 +163,7 @@ module.exports = function (options) {
                 ctx._get[name] = value;
             }
             return null;
-        };
+        });
 
         /**
          * get or set body params
@@ -172,7 +172,7 @@ module.exports = function (options) {
          * @param {any} value 
          * @returns 
          */
-        ctx.post = function (name, value) {
+        lib.define(ctx, 'post', function (name, value) {
             if (value === undefined) {
                 if (name === undefined) {
                     return ctx._post;
@@ -185,7 +185,7 @@ module.exports = function (options) {
                 ctx._post[name] = value;
             }
             return null;
-        };
+        });
 
         /**
          * 
@@ -193,17 +193,17 @@ module.exports = function (options) {
          * @param {any} name 
          * @returns 
          */
-        ctx.param = function (name) {
+        lib.define(ctx, 'param', function (name) {
             if (name === undefined) {
-                return lib.extend(this._get, this._post);
+                return lib.extend(ctx._get, ctx._post);
             } else {
-                if (lib.isTrueEmpty(this._post[name])) {
-                    return lib.isTrueEmpty(this._get[name]) ? '' : this._get[name];
+                if (lib.isTrueEmpty(ctx._post[name])) {
+                    return lib.isTrueEmpty(ctx._get[name]) ? '' : ctx._get[name];
                 } else {
                     return ctx.post(name);
                 }
             }
-        };
+        });
 
         /**
          * get or set files
@@ -212,7 +212,7 @@ module.exports = function (options) {
          * @param {any} value 
          * @returns 
          */
-        ctx.file = function (name, value) {
+        lib.define(ctx, 'file', function (name, value) {
             if (value === undefined) {
                 if (name === undefined) {
                     return ctx._file;
@@ -221,7 +221,7 @@ module.exports = function (options) {
             }
             ctx._file[name] = value;
             return null;
-        };
+        });
 
         return next();
     };
