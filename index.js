@@ -129,7 +129,21 @@ const parsePayload = function (ctx, options) {
     return Promise.resolve({});
 };
 
+/**
+ * default options
+ */
+const defaultOptions = {
+    extTypes: {
+        json: ['application/json'],
+        form: ['application/x-www-form-urlencoded'],
+        text: ['text/plain'],
+        multipart: ['multipart/form-data'],
+        xml: ['text/xml']
+    }
+};
+
 module.exports = function (options) {
+    options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
     return function* (ctx, next) {
         lib.define(ctx, '_get', ctx.query, 1);
         // parse payload
