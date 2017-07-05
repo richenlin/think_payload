@@ -2,7 +2,7 @@
 -----
 
 [![npm version](https://badge.fury.io/js/think_payload.svg)](https://badge.fury.io/js/think_payload)
-[![Dependency Status](https://david-dm.org/richenlin/think_payload.svg)](https://david-dm.org/richenlin/think_payload)
+[![Dependency Status](https://david-dm.org/thinkkoa/think_payload.svg)](https://david-dm.org/thinkkoa/think_payload)
 
 Payload parser for ThinkKoa
 
