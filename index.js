@@ -164,7 +164,7 @@ module.exports = function (options) {
          * @param {any} value 
          * @returns 
          */
-        lib.define(ctx, 'get', function (name, value) {
+        lib.define(ctx, 'querys', function (name, value) {
             if (value === undefined) {
                 if (name === undefined) {
                     return ctx._get;
