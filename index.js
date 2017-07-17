@@ -169,13 +169,9 @@ module.exports = function (options) {
                 if (name === undefined) {
                     return ctx._get;
                 }
-                if (think.isString(name)) {
-                    return think.isTrueEmpty(ctx._get[name]) ? '' : ctx._get[name];
-                }
-                ctx._get = think.extend(ctx._get, name);
-            } else {
-                ctx._get[name] = value;
+                return ctx._get[name];
             }
+            ctx._get[name] = value;
             return null;
         });
 
@@ -191,13 +187,9 @@ module.exports = function (options) {
                 if (name === undefined) {
                     return ctx._post;
                 }
-                if (think.isString(name)) {
-                    return think.isTrueEmpty(ctx._post[name]) ? '' : ctx._post[name];
-                }
-                ctx._post = think.extend(ctx._post, name);
-            } else {
-                ctx._post[name] = value;
+                return ctx._post[name];
             }
+            ctx._post[name] = value;
             return null;
         });
 
@@ -211,10 +203,10 @@ module.exports = function (options) {
             if (name === undefined) {
                 return lib.extend(ctx._get, ctx._post);
             } else {
-                if (lib.isTrueEmpty(ctx._post[name])) {
-                    return lib.isTrueEmpty(ctx._get[name]) ? '' : ctx._get[name];
+                if (ctx._post[name] === undefined) {
+                    return ctx._get[name];
                 } else {
-                    return ctx.post(name);
+                    return ctx._post[name];
                 }
             }
         });
@@ -231,7 +223,7 @@ module.exports = function (options) {
                 if (name === undefined) {
                     return ctx._file;
                 }
-                return think.isTrueEmpty(ctx._file[name]) ? {} : ctx._file[name];
+                return ctx._file[name];
             }
             ctx._file[name] = value;
             return null;
