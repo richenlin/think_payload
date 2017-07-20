@@ -30,6 +30,14 @@ config: { //中间件配置
             multipart: ['multipart/form-data'],
             xml: ['text/xml']
         }
+        limit: '1mb',
+        encoding: 'utf-8',
+        multiples: true,
+        // keepExtensions: false,
+        // multiples: true,
+        // uploadDir:  os.tmpdir(),
+        // hash: 'md5'
+
     }
 }
 ```
