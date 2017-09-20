@@ -33,9 +33,11 @@ config: { //中间件配置
         limit: '1mb',
         encoding: 'utf-8',
         multiples: true,
-        // keepExtensions: false,
-        // multiples: true,
+        //If you want the files written to form.uploadDir to include the extensions of the original files, set this property to true.
+        keepExtensions: false,
+        //Sets the directory for placing file uploads in. You can move them later on using fs.rename(). The default is os.tmpdir().
         // uploadDir:  os.tmpdir(),
+        //If you want checksums calculated for incoming files, set this to either 'sha1' or 'md5'.
         // hash: 'md5'
 
     }

@@ -19,12 +19,11 @@ const defaultOptions = {
         multipart: ['multipart/form-data'],
         xml: ['text/xml']
     },
-    limit: '1mb',
+    limit: '20mb',
     encoding: 'utf-8',
     multiples: true,
     // keepExtensions: false,
-    // multiples: true,
-    // uploadDir:  os.tmpdir(),
+    // uploadDir: os.tmpdir(),
     // hash: 'md5'
 };
 
