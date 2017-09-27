@@ -22,7 +22,7 @@ const defaultOptions = {
     limit: '20mb',
     encoding: 'utf-8',
     multiples: true,
-    // keepExtensions: false,
+    keepExtensions: true,
     // uploadDir: os.tmpdir(),
     // hash: 'md5'
 };
