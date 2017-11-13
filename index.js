@@ -27,7 +27,7 @@ const defaultOptions = {
     // hash: 'md5'
 };
 
-module.exports = function (options) {
+module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
     return function* (ctx, next) {
         lib.define(ctx, '_get', ctx.query, 1);
