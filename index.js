@@ -29,10 +29,10 @@ const defaultOptions = {
 
 module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
-    return function* (ctx, next) {
+    return async function (ctx, next) {
         lib.define(ctx, '_get', ctx.query, 1);
         // parse payload
-        ctx.request.body = yield parse(ctx, options);
+        ctx.request.body = await parse(ctx, options);
         if (ctx.request.body.post) {
             lib.define(ctx, '_post', ctx.request.body.post, 1);
         } else {
