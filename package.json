@@ -1,6 +1,6 @@
 {
   "name": "think_payload",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Payload parser Middleware for ThinkKoa.",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,7 @@
     "inflation": "^2.0.0",
     "on-finished": "^2.3.0",
     "raw-body": "^2.3.0",
-    "think_lib": "^1.x.x",
+    "think_lib": "^2.x.x",
     "xml2js": "^0.4.19"
   }
 }
