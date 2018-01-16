@@ -32,7 +32,9 @@ module.exports = function (options, app) {
     return async function (ctx, next) {
         lib.define(ctx, '_get', ctx.query, 1);
         // parse payload
-        ctx.request.body = await parse(ctx, options);
+        ctx.request.body = await parse(ctx, options).catch(err => {
+            return {};
+        });
         if (ctx.request.body.post) {
             lib.define(ctx, '_post', ctx.request.body.post, 1);
         } else {
