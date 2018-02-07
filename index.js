@@ -32,16 +32,16 @@ module.exports = function (options, app) {
     return async function (ctx, next) {
         lib.define(ctx, '_get', ctx.query, 1);
         // parse payload
-        let payload = await parse(ctx, options).catch(err => {
+        ctx.request.body = await parse(ctx, options).catch(err => {
             return {};
         });
-        if (payload.post) {
-            lib.define(ctx, '_post', payload.post, 1);
+        if (ctx.request.body.post) {
+            lib.define(ctx, '_post', ctx.request.body.post, 1);
         } else {
-            lib.define(ctx, '_post', payload, 1);
+            lib.define(ctx, '_post', ctx.request.body, 1);
         }
-        if (payload.file) {
-            lib.define(ctx, '_file', payload.file, 1);
+        if (ctx.request.body.file) {
+            lib.define(ctx, '_file', ctx.request.body.file, 1);
         }
 
         /**
