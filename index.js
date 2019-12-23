@@ -30,7 +30,7 @@ const defaultOptions = {
 module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
     return async function (ctx, next) {
-        lib.define(ctx, '_get', ctx.query, 1);
+        lib.define(ctx, '_get', Object.assign(ctx.query, ctx.params || {}), 1);
         // parse payload
         ctx.request.body = await parse(ctx, options).catch(err => {
             return {};
