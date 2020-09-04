@@ -6,7 +6,8 @@
  * @version    17/5/2
  */
 const lib = require('think_lib');
-const parse = require('./parse.js');
+const logger = require('think_logger');
+const parse = require('./lib/parse.js');
 
 /**
  * default options
@@ -30,90 +31,42 @@ const defaultOptions = {
 module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
     return async function (ctx, next) {
-        lib.define(ctx, '_get', Object.assign(ctx.query, ctx.params || {}), 1);
-        // parse payload
-        ctx.request.body = await parse(ctx, options).catch(err => {
-            return {};
-        });
-        if (ctx.request.body.post) {
-            lib.define(ctx, '_post', ctx.request.body.post, 1);
-        } else {
-            lib.define(ctx, '_post', ctx.request.body, 1);
-        }
-        if (ctx.request.body.file) {
-            lib.define(ctx, '_file', ctx.request.body.file, 1);
-        }
-
+        // cached
+        lib.define(ctx, '_cache', {
+            body: null,
+            query: null
+        }, true);
         /**
-         * get or set query params
-         * 
-         * @param {any} name 
-         * @param {any} value 
-         * @returns 
+         * request body parser
+         *
+         * @param {any} name
+         * @param {any} value
+         * @returns
          */
-        lib.define(ctx, 'querys', function (name, value) {
-            if (value === undefined) {
-                if (name === undefined) {
-                    return ctx._get;
-                }
-                return ctx._get[name];
+        lib.define(ctx, 'bodyParser', function () {
+            if (!lib.isTrueEmpty(ctx._cache.body)) {
+                return ctx._cache.body;
             }
-            ctx._get[name] = value;
-            return null;
+            return parse(ctx, options).then(res => {
+                ctx._cache.body = res || {};
+                return ctx._cache.body;
+            }).catch(err => {
+                logger.error(err);
+                return {};
+            });
         });
-
         /**
-         * get or set body params
-         * 
-         * @param {any} name 
-         * @param {any} value 
-         * @returns 
+         * queryString parser
+         *
+         * @param {any} name
+         * @param {any} value
+         * @returns
          */
-        lib.define(ctx, 'post', function (name, value) {
-            if (value === undefined) {
-                if (name === undefined) {
-                    return ctx._post;
-                }
-                return ctx._post[name];
+        lib.define(ctx, 'queryParser', function () {
+            if (lib.isTrueEmpty(ctx._cache.query)) {
+                ctx._cache.query = Object.assign(ctx.query, ctx.params || {});
             }
-            ctx._post[name] = value;
-            return null;
-        });
-
-        /**
-         * 
-         * 
-         * @param {any} name 
-         * @returns 
-         */
-        lib.define(ctx, 'param', function (name) {
-            if (name === undefined) {
-                return lib.extend(ctx._get, ctx._post);
-            } else {
-                if (ctx._post[name] === undefined) {
-                    return ctx._get[name];
-                } else {
-                    return ctx._post[name];
-                }
-            }
-        });
-
-        /**
-         * get or set files
-         * 
-         * @param {any} name 
-         * @param {any} value 
-         * @returns 
-         */
-        lib.define(ctx, 'file', function (name, value) {
-            if (value === undefined) {
-                if (name === undefined) {
-                    return ctx._file;
-                }
-                return ctx._file[name];
-            }
-            ctx._file[name] = value;
-            return null;
+            return ctx._cache.query;
         });
 
         return next();

@@ -1,11 +1,10 @@
 {
   "name": "think_payload",
-  "version": "2.2.1",
+  "version": "3.1.0",
   "description": "Payload parser Middleware for ThinkKoa.",
   "main": "index.js",
   "scripts": {
     "test": "npm run eslint",
-    "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- -t 50000 --recursive  -R spec test/",
     "prepublish": "npm test",
     "eslint": "eslint index.js"
   },
@@ -19,7 +18,6 @@
   },
   "homepage": "https://github.com/thinkkoa/think_payload",
   "devDependencies": {
-    "acorn": "^7.1.1",
     "eslint": "^6.8.0"
   },
   "dependencies": {
@@ -28,6 +26,7 @@
     "on-finished": "^2.3.0",
     "raw-body": "^2.4.1",
     "think_lib": "^2.x.x",
+    "think_logger": "^2.x.x",
     "xml2js": "^0.4.23"
   }
 }
